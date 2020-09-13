@@ -10,4 +10,17 @@ router.get('/', (req, res) => {
     .catch(error => console.error(error))
 })
 
+router.get('/search', (req, res) => {
+  const keyword = req.query.keyword
+  Restaurant.find()
+    .lean()
+    .then(restaurants => {
+      return restaurants.filter(item => {
+        return item.name.toLowerCase().includes(keyword.toLowerCase()) || item.name_en.toLowerCase().includes(keyword.toLowerCase())
+      })
+    })
+    .then(searchResult => res.render('index', { restaurants: searchResult, keyword }))
+    .catch(error => console.log(error))
+})
+
 module.exports = router
